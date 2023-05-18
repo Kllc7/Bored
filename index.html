@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+  <style>
+    *{
+        margin: 70px;
+        padding: auto;
+        text-align: center;
+        font-size: 49px;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    button{
+        width: 200px;
+        height: 200px;
+        size: 100px;
+        
+    }
+    p{
+        font-size: x-large;
+    }
+#result{
+    color: rgb(83, 83, 83);
+    transition: ;
+    margin: 20px;
+    border-radius: 50px;
+    background-color: rgb(236, 236, 236);
+    width: auto;
+    font-size: xx-large;
+    
+}
+  </style>
+</head>
+<body>
+  <h1>Rock Paper Scissors</h1>
+
+  <p>Choose your move:</p>
+  <button onclick="play('7AJRA')">🗿</button>
+  <button onclick="play('paper')">📄</button>
+  <button onclick="play('scissors')">✂️</button>
+
+  <p id="result"></p>
+
+</body>
+<script>
+    function play(playerChoice) {
+
+      var choices = ['7AJRA', 'paper', 'scissors'];
+      var computerChoice = choices[Math.floor(Math.random() * 3)];
+
+      var result;
+      if (playerChoice === computerChoice) {
+        result = "Tied 🥱";
+      } else if (
+        (playerChoice === '7AJRA' && computerChoice === 'scissors') ||
+        (playerChoice === 'WARQA' && computerChoice === '7AJRA') ||
+        (playerChoice === 'MQAS' && computerChoice === 'paper')
+      ) {
+        result = "You Win! 🏆";
+      } else {
+        result = "You Lose! 👎";
+      }
+
+      document.getElementById('result').innerHTML = `<br> Player: ${playerChoice}<br>-<br>Computer: ${computerChoice}<br>-<br>${result}<br><br>`;
+    }
+  </script>
+</html>
