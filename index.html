@@ -1,74 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
-  <style>
-    *{
-        margin: 70px;
-        padding: auto;
-        text-align: center;
-        font-size: 49px;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-    }
-    button{
-        width: 200px;
-        height: 200px;
-        size: 100px;
+import pygame
+import random
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Set up the screen
+WIDTH, HEIGHT = 600, 600
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Rock Paper Scissors")
+
+# Define colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREY = (200, 200, 200)
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+# Load images
+rock_img = pygame.image.load('rock.png')  # Replace with path to your image
+paper_img = pygame.image.load('paper.png')  # Replace with path to your image
+scissors_img = pygame.image.load('scissors.png')  # Replace with path to your image
+rock_img = pygame.transform.scale(rock_img, (150, 150))
+paper_img = pygame.transform.scale(paper_img, (150, 150))
+scissors_img = pygame.transform.scale(scissors_img, (150, 150))
+
+# Font for text
+font = pygame.font.Font(None, 48)
+
+# Function to display text
+def display_text(text, color, y_offset=0):
+    text_surface = font.render(text, True, color)
+    screen.blit(text_surface, (WIDTH//2 - text_surface.get_width()//2, HEIGHT//2 - 100 + y_offset))
+
+# Main game function
+def play_game():
+    while True:
+        screen.fill(WHITE)
+
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        # Display choices
+        display_text("Rock Paper Scissors", BLUE)
         
-    }
-    p{
-        font-size: x-large;
-    }
-#result{
-    color: rgb(83, 83, 83);
-    transition: ;
-    margin: 20px;
-    border-radius: 50px;
-    background-color: rgb(236, 236, 236);
-    width: auto;
-    font-size: xx-large;
-    
-}
-  </style>
-</head>
-<body>
-  <h1>Rock Paper Scissors</h1>
+        # Buttons (or visual selections)
+        screen.blit(rock_img, (50, HEIGHT - 200))
+        screen.blit(paper_img, (WIDTH//2 - 75, HEIGHT - 200))
+        screen.blit(scissors_img, (WIDTH - 200, HEIGHT - 200))
 
-  <p>Choose your move:</p>
-  <button onclick="play('Rock')">🗿</button>
-  <button onclick="play('Paper')">📄</button>
-  <button onclick="play('Scissors')">✂️</button>
+        # Wait for the user to click
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
 
-  <p id="result"></p>
+        if click[0]:
+            # Player selection
+            if 50 <= mouse_x <= 200 and HEIGHT - 200 <= mouse_y <= HEIGHT - 50:
+                player_choice = 'Rock'
+            elif WIDTH//2 - 75 <= mouse_x <= WIDTH//2 + 75 and HEIGHT - 200 <= mouse_y <= HEIGHT - 50:
+                player_choice = 'Paper'
+            elif WIDTH - 200 <= mouse_x <= WIDTH - 50 and HEIGHT - 200 <= mouse_y <= HEIGHT - 50:
+                player_choice = 'Scissors'
 
-</body>
-<script>
-    function play(playerChoice) {
+            # Computer choice
+            computer_choice = random.choice(['Rock', 'Paper', 'Scissors'])
 
-      var choices = ['Rock', 'Paper', 'Scissors'];
-      var computerChoice = choices[Math.floor(Math.random() * 3)];
+            # Determine the winner
+            if player_choice == computer_choice:
+                result = "Tied 🥱"
+            elif (player_choice == 'Rock' and computer_choice == 'Scissors') or \
+                 (player_choice == 'Paper' and computer_choice == 'Rock') or \
+                 (player_choice == 'Scissors' and computer_choice == 'Paper'):
+                result = "You Win! 🏆"
+            else:
+                result = "You Lose! 👎"
 
-      var result;
-      if (playerChoice === computerChoice) {
-        result = "Tied 🥱";
-      } else if (
-        (playerChoice === 'Rock' && computerChoice === 'Scissors') ||
-        (playerChoice === 'Paper' && computerChoice === 'Rock') ||
-        (playerChoice === 'Scissors' && computerChoice === 'Paper')
-      ) {
-        result = "You Win! 🏆";
-      } else {
-        result = "You Lose! 👎";
-      }
+            # Display results
+            display_text(f"Player: {player_choice}", GREEN, 50)
+            display_text(f"Computer: {computer_choice}", RED, 100)
+            display_text(result, GREY, 150)
 
-      document.getElementById('result').innerHTML = `<br> Player: ${playerChoice}<br>-<br>Computer: ${computerChoice}<br>-<br>${result}<br><br>`;
-    }
-  </script>
-</html>
+        pygame.display.flip()
+        pygame.time.wait(100)
+
+# Run the game
+play_game()
+
