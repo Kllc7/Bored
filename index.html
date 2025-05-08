@@ -1,239 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rock Paper Scissors</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
   <style>
- /* Global Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    :root {
+      --bg-gradient: linear-gradient(-45deg, #f0f0f0, #e0f7ff, #fff5f0, #e8faff);
+      --bg-dark: linear-gradient(-45deg, #1b1b1b, #2c2c2c, #121212);
+      --text-light: #ffffff;
+      --text-dark: #111111;
+      --glass-light: rgba(255, 255, 255, 0.6);
+      --glass-dark: rgba(0, 0, 0, 0.6);
+    }
 
-/* Background Animation */
-body {
-  height: 100vh;
-  width: 100vw;
-  background: linear-gradient(120deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
-  background-size: 400% 400%;
-  animation: gradientFlow 15s ease infinite;
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: var(--bg-gradient);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      transition: background 0.5s, color 0.5s;
+    }
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
 
-  font-family: 'Orbitron', sans-serif;
-  color: #fff;
-  padding: 20px;
-  overflow-x: hidden;
-}
+    .title {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
 
-/* Logo */
-img {
-  width: 90px;
-  margin-top: 20px;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
-  animation: fadeIn 1.2s ease-in-out;
-}
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
 
-/* Title */
-h1 {
-  font-family: 'Bungee Spice', cursive;
-  font-size: 3.2rem;
-  margin: 15px 0 10px;
-  text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
-}
+    button.choice {
+      width: 100px;
+      height: 100px;
+      font-size: 2.5rem;
+      border: none;
+      background: var(--glass-light);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      transition: transform 0.2s ease, background 0.5s;
+      cursor: pointer;
+    }
 
-/* Subtitle */
-p {
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  text-align: center;
-}
+    button.choice:hover {
+      transform: scale(1.1);
+      background: rgba(255,255,255,0.75);
+    }
 
-/* Buttons container */
-.buttons {
-  display: flex;
-  gap: 30px;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 20px 0;
-}
+    #result {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      font-weight: bold;
+    }
 
-/* Game buttons */
-button {
-  font-size: 2rem;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
+    .controls {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
 
-button:hover {
-  transform: scale(1.15);
-  background: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
-}
+    .toggle-btn {
+      background: var(--glass-light);
+      border: none;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+    }
 
-/* Result box */
-#result {
-  margin-top: 20px;
-  padding: 25px;
-  font-size: 1.4rem;
-  max-width: 90%;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
-  animation: popIn 0.4s ease;
-}
+    .dark-mode {
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
 
-/* Reset Button */
-#reset {
-  margin-top: 25px;
-  padding: 10px 25px;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
-  color: #fff;
-  cursor: pointer;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
-  transition: all 0.3s ease;
-}
+    .dark-mode .choice {
+      background: var(--glass-dark);
+    }
 
-#reset:hover {
-  background: rgba(255, 255, 255, 0.35);
-  transform: scale(1.05);
-}
+    .dark-mode .choice:hover {
+      background: rgba(50, 50, 50, 0.85);
+    }
 
-/* Responsive Design */
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2rem;
-  }
+    .dark-mode .toggle-btn {
+      background: var(--glass-dark);
+      color: var(--text-light);
+    }
 
-  .buttons button {
-    width: 80px;
-    height: 80px;
-    font-size: 1.6rem;
-  }
+    @media (max-width: 600px) {
+      .title {
+        font-size: 2rem;
+      }
 
-  p, #result {
-    font-size: 1.1rem;
-  }
-}
+      .buttons {
+        gap: 0.7rem;
+      }
 
-/* Animations */
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+      button.choice {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
+      #result {
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
-<img src="dfghjk.png" alt="Game Logo" style="width: 120px; margin-top: 20px;" />
-  
-
-  <h1>🔥 Rock Paper Scissors 🔥</h1>
-
-  <div class="scoreboard">
-    <p>Round: <span id="round">1</span></p>
-    <p>Player: <span id="playerScore">0</span> | Computer: <span id="computerScore">0</span></p>
+  <div class="controls">
+    <button id="toggle-mode" class="toggle-btn">Toggle Dark Mode</button>
+    <button id="toggle-music" class="toggle-btn">🔊 Music</button>
   </div>
 
-  <p>Choose your move:</p>
+  <h1 class="title">Rock Paper Scissors</h1>
+
   <div class="buttons">
-    <button onclick="play('Rock')">🪨</button>
-    <button onclick="play('Paper')">📄</button>
-    <button onclick="play('Scissors')">✂️</button>
+    <button class="choice" onclick="play('Rock')">🪨</button>
+    <button class="choice" onclick="play('Paper')">📄</button>
+    <button class="choice" onclick="play('Scissors')">✂️</button>
   </div>
 
-  <p id="result"></p>
+  <div id="result"></div>
 
-  <button id="reset" onclick="resetGame()">🔁 Reset Game</button>
-
-  <audio id="winSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
-  <audio id="loseSound" src="https://www.soundjay.com/button/beep-10.wav"></audio>
+  <audio id="bg-music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_ae82472125.mp3?filename=arcade-118310.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+  </audio>
 
   <script>
-    let playerScore = 0;
-    let computerScore = 0;
-    let round = 1;
-
-    const taunts = [
-      "😎 Too easy!",
-      "🧠 Outplayed!",
-      "🎲 Try again, human.",
-      "💻 I'm programmed to win!",
-      "😏 Not today!"
-    ];
+    const resultDisplay = document.getElementById('result');
+    const music = document.getElementById('bg-music');
+    const toggleMusicBtn = document.getElementById('toggle-music');
+    const toggleModeBtn = document.getElementById('toggle-mode');
+    const body = document.body;
 
     function play(playerChoice) {
       const choices = ['Rock', 'Paper', 'Scissors'];
       const computerChoice = choices[Math.floor(Math.random() * 3)];
-
-      let result = '';
-      let win = false;
+      let result;
 
       if (playerChoice === computerChoice) {
-        result = `🤝 It's a tie! Both chose ${playerChoice}.`;
+        result = "Tied 🥱";
       } else if (
         (playerChoice === 'Rock' && computerChoice === 'Scissors') ||
         (playerChoice === 'Paper' && computerChoice === 'Rock') ||
         (playerChoice === 'Scissors' && computerChoice === 'Paper')
       ) {
-        result = `🎉 You win! ${playerChoice} beats ${computerChoice}.`;
-        playerScore++;
-        win = true;
-        document.getElementById('winSound').play();
+        result = "You Win! 🏆";
       } else {
-        result = `💀 You lose! ${computerChoice} beats ${playerChoice}.<br>${taunts[Math.floor(Math.random() * taunts.length)]}`;
-        computerScore++;
-        document.getElementById('loseSound').play();
+        result = "You Lose! 👎";
       }
 
-      round++;
-      updateUI(result);
+      resultDisplay.innerHTML = `You: ${playerChoice} - Computer: ${computerChoice}<br>${result}`;
     }
 
-    function updateUI(resultText) {
-      document.getElementById('playerScore').textContent = playerScore;
-      document.getElementById('computerScore').textContent = computerScore;
-      document.getElementById('round').textContent = round;
-      document.getElementById('result').innerHTML = resultText;
-    }
+    toggleModeBtn.onclick = () => {
+      body.classList.toggle('dark-mode');
+    };
 
-    function resetGame() {
-      playerScore = 0;
-      computerScore = 0;
-      round = 1;
-      updateUI("Game reset. Let's go again!");
-    }
+    toggleMusicBtn.onclick = () => {
+      if (music.paused) {
+        music.play();
+        toggleMusicBtn.textContent = "🔇 Music";
+      } else {
+        music.pause();
+        toggleMusicBtn.textContent = "🔊 Music";
+      }
+    };
   </script>
-
 </body>
 </html>
