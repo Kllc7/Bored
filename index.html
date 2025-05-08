@@ -4,227 +4,235 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rock Paper Scissors</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rowdies:wght@700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg-gradient: linear-gradient(-45deg, #f0f0f0, #e0f7ff, #fff5f0, #e8faff);
-      --bg-dark: linear-gradient(-45deg, #1b1b1b, #2c2c2c, #121212);
-      --text-light: #ffffff;
-      --text-dark: #111111;
-      --glass-light: rgba(255, 255, 255, 0.6);
-      --glass-dark: rgba(0, 0, 0, 0.6);
+      --light-bg: #f1f1f1;
+      --dark-bg: #121212;
+      --light-text: #000;
+      --dark-text: #fff;
+      --glass: rgba(255, 255, 255, 0.2);
+      --blur: blur(10px);
     }
-
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Orbitron', sans-serif;
-      background: var(--bg-gradient);
+      padding: 0;
+    }
+    body {
+      font-family: 'Rowdies', sans-serif;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(-45deg, #e3f2fd, #e0f7fa, #fce4ec, #f3e5f5);
       background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      transition: background 0.5s, color 0.5s;
+      animation: bgFlow 30s ease infinite;
+      color: var(--light-text);
+      transition: background 0.5s, color 0.3s;
+      overflow-x: hidden;
+    }
+    body.dark {
+      background: url('https://www.transparenttextures.com/patterns/stardust.png'), linear-gradient(-45deg, #000000, #333333, #1a1a1a, #222);
+      color: var(--dark-text);
     }
 
-    @keyframes gradientBG {
+    @keyframes bgFlow {
       0% {background-position: 0% 50%;}
       50% {background-position: 100% 50%;}
       100% {background-position: 0% 50%;}
     }
 
-    .title {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      transition: color 0.3s;
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .logo {
+      width: 120px;
+      transition: filter 0.3s;
+    }
+
+    body.dark .logo {
+      filter: invert(1);
     }
 
     .score {
-      font-size: 4rem;
-      font-weight: bold;
-      margin-top: 1rem;
-      transition: color 0.3s;
+      font-size: 3rem;
+      margin: 0;
+      transition: color 0.4s;
+    }
+
+    .title {
+      font-size: 2.5rem;
+      user-select: none;
+    }
+
+    .game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      padding: 2rem;
     }
 
     .buttons {
       display: flex;
+      justify-content: center;
       gap: 1rem;
       flex-wrap: wrap;
-      justify-content: center;
     }
 
-    button.choice {
-      width: 100px;
-      height: 100px;
+    .buttons button {
       font-size: 2.5rem;
+      padding: 1rem 2rem;
       border: none;
-      background: var(--glass-light);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      transition: transform 0.2s ease, background 0.5s;
+      border-radius: 1rem;
+      background: var(--glass);
+      backdrop-filter: var(--blur);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
       cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
     }
 
-    button.choice:hover {
+    .buttons button:hover {
       transform: scale(1.1);
-      background: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.4);
     }
 
-    #result {
-      font-size: 1.5rem;
-      margin-top: 2rem;
-      font-weight: bold;
+    .message {
+      font-size: 1.8rem;
+      text-align: center;
+      padding: 1rem;
+      backdrop-filter: blur(10px);
     }
 
     .controls {
-      position: absolute;
+      position: fixed;
       top: 1rem;
       right: 1rem;
       display: flex;
       gap: 1rem;
-      align-items: center;
     }
 
-    .toggle-btn,
-    .toggle-music-btn {
-      background: var(--glass-light);
+    .toggle-btn {
+      background: transparent;
       border: none;
-      padding: 0.5rem;
-      border-radius: 50%;
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: background 0.3s;
+      font-size: 1.5rem;
     }
 
-    .dark-mode {
-      background: var(--bg-dark);
-      color: var(--text-light);
-    }
-
-    .dark-mode .choice {
-      background: var(--glass-dark);
-    }
-
-    .dark-mode .choice:hover {
-      background: rgba(50, 50, 50, 0.85);
-    }
-
-    .dark-mode .toggle-btn,
-    .dark-mode .toggle-music-btn {
-      background: var(--glass-dark);
-      color: var(--text-light);
+    .toggle-btn svg {
+      width: 32px;
+      height: 32px;
+      fill: currentColor;
     }
 
     @media (max-width: 600px) {
-      .title {
-        font-size: 2rem;
-      }
-
-      .score {
-        font-size: 3rem;
-      }
-
-      .buttons {
-        gap: 0.7rem;
-      }
-
-      button.choice {
-        width: 80px;
-        height: 80px;
-        font-size: 2rem;
-      }
-
-      #result {
-        font-size: 1.2rem;
-      }
+      .title { font-size: 2rem; }
+      .score { font-size: 2.2rem; }
+      .buttons button { font-size: 2rem; padding: 0.8rem 1.5rem; }
+      .message { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
   <div class="controls">
-    <button id="toggle-mode" class="toggle-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8-9h-1M5 12H4m15.364-6.364l-.707.707M6.343 18.364l-.707-.707M18.364 18.364l-.707-.707M6.343 6.343l-.707.707M12 9a3 3 0 11-6 0 3 3 0 016 0z"/>
-      </svg>
+    <button class="toggle-btn" onclick="toggleDarkMode()" title="Toggle dark mode">
+      <svg id="modeIcon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 000 18 9 9 0 010-18z"/></svg>
     </button>
-    <button id="toggle-music" class="toggle-music-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v16l-12-3z"/>
-      </svg>
+    <button class="toggle-btn" onclick="toggleMusic()" title="Toggle music">
+      <svg id="soundIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/></svg>
     </button>
   </div>
 
-  <h1 class="title">Rock Paper Scissors</h1>
+  <header>
+    <p id="score" class="score">Score: 0</p>
+    <img src="dfghjk.png" alt="Game Logo" class="logo" />
+    <h1 class="title">Rock Paper Scissors</h1>
+  </header>
 
-  <div class="score" id="score">Score: 0</div>
-
-  <div class="buttons">
-    <button class="choice" onclick="play('Rock')">🪨</button>
-    <button class="choice" onclick="play('Paper')">📄</button>
-    <button class="choice" onclick="play('Scissors')">✂️</button>
-  </div>
-
-  <div id="result"></div>
+  <main class="game">
+    <div class="buttons">
+      <button onclick="play('Rock')">🪨</button>
+      <button onclick="play('Paper')">📄</button>
+      <button onclick="play('Scissors')">✂️</button>
+    </div>
+    <div class="message" id="result">Choose wisely...</div>
+  </main>
 
   <audio id="bg-music" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_ae82472125.mp3?filename=arcade-118310.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
+    <source src="https://cdn.pixabay.com/audio/2023/03/13/audio_c631740381.mp3" type="audio/mpeg">
   </audio>
 
   <script>
     let score = 0;
-    const resultDisplay = document.getElementById('result');
-    const scoreDisplay = document.getElementById('score');
-    const music = document.getElementById('bg-music');
-    const toggleMusicBtn = document.getElementById('toggle-music');
-    const toggleModeBtn = document.getElementById('toggle-mode');
-    const body = document.body;
-    const title = document.querySelector('.title');
+    let dark = false;
+    let musicPlaying = false;
 
-    function play(playerChoice) {
-      const choices = ['Rock', 'Paper', 'Scissors'];
-      const computerChoice = choices[Math.floor(Math.random() * 3)];
-      let result;
+    const resultDiv = document.getElementById("result");
+    const scoreEl = document.getElementById("score");
+    const bgMusic = document.getElementById("bg-music");
 
-      if (playerChoice === computerChoice) {
-        result = "Tied 🥱";
-      } else if (
-        (playerChoice === 'Rock' && computerChoice === 'Scissors') ||
-        (playerChoice === 'Paper' && computerChoice === 'Rock') ||
-        (playerChoice === 'Scissors' && computerChoice === 'Paper')
-      ) {
-        result = "You Win! 🏆";
-        score += 1;
-      } else {
-        result = "You Lose! 👎";
-        score -= 1;
-      }
+    const mockMsgs = {
+      win: ["You win! 🏆", "Well played!", "You're on fire! 🔥", "Victory dance time!"],
+      lose: ["Ouch! You lost! 👎", "Try again, mortal!", "Computer mocks you! 🤖", "Better luck next time!"],
+      tie: ["Draw... again? 😒", "Copycat move!", "Neither of us wins!", "It’s a tie, genius."]
+    };
 
-      resultDisplay.innerHTML = `You: ${playerChoice} - Computer: ${computerChoice}<br>${result}`;
-      scoreDisplay.innerHTML = `Score: ${score}`;
-
+    function updateScoreDisplay() {
+      scoreEl.textContent = `Score: ${score}`;
+      scoreEl.style.color = score < 0 ? "red" : "green";
       if (score % 5 === 0 && score !== 0) {
-        scoreDisplay.style.color = 'red';
+        scoreEl.style.textShadow = "0 0 10px lime";
       } else {
-        scoreDisplay.style.color = 'black';
+        scoreEl.style.textShadow = "none";
       }
     }
 
-    toggleModeBtn.onclick = () => {
-      body.classList.toggle('dark-mode');
-      title.classList.toggle('dark-mode');
-    };
+    function play(playerChoice) {
+      const choices = ["Rock", "Paper", "Scissors"];
+      const computerChoice = choices[Math.floor(Math.random() * choices.length)];
 
-    toggleMusicBtn.onclick = () => {
-      if (music.paused) {
-        music.play();
+      let message = "";
+      if (playerChoice === computerChoice) {
+        message = mockMsgs.tie[Math.floor(Math.random() * mockMsgs.tie.length)];
+      } else if (
+        (playerChoice === "Rock" && computerChoice === "Scissors") ||
+        (playerChoice === "Paper" && computerChoice === "Rock") ||
+        (playerChoice === "Scissors" && computerChoice === "Paper")
+      ) {
+        score++;
+        message = mockMsgs.win[Math.floor(Math.random() * mockMsgs.win.length)];
       } else {
-        music.pause();
+        score--;
+        message = mockMsgs.lose[Math.floor(Math.random() * mockMsgs.lose.length)];
       }
-    };
+
+      resultDiv.innerHTML = `Player: ${playerChoice}<br>Computer: ${computerChoice}<br><strong>${message}</strong>`;
+      updateScoreDisplay();
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark");
+      dark = !dark;
+      const icon = document.getElementById("modeIcon");
+      icon.innerHTML = dark
+        ? '<path d="M12 3a9 9 0 000 18 9 9 0 010-18z"/>'
+        : '<path d="M6.76 4.84l-1.8-1.79L4.22 4.22l1.79 1.8a7.94 7.94 0 00-2.01 4.61H2v2h2c.19 1.64.89 3.13 1.95 4.35l-1.73 1.73 1.42 1.42 1.73-1.73c1.22 1.06 2.71 1.76 4.35 1.95v2h2v-2c1.64-.19 3.13-.89 4.35-1.95l1.73 1.73 1.42-1.42-1.73-1.73c1.06-1.22 1.76-2.71 1.95-4.35h2v-2h-2c-.19-1.64-.89-3.13-1.95-4.35l1.73-1.73-1.42-1.42-1.73 1.73A7.94 7.94 0 0014 4.22V2h-2v2c-1.64.19-3.13.89-4.35 1.95z"/>';
+    }
+
+    function toggleMusic() {
+      if (musicPlaying) {
+        bgMusic.pause();
+        document.getElementById("soundIcon").innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3z"/>';
+      } else {
+        bgMusic.play();
+        document.getElementById("soundIcon").innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13 1v4h2v-4h-2z"/>';
+      }
+      musicPlaying = !musicPlaying;
+    }
+
+    updateScoreDisplay();
   </script>
 </body>
 </html>
