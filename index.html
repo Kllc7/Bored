@@ -3,25 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Rock Paper Scissors</title>
+  <title>Ultimate Rock Paper Scissors</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-light: linear-gradient(135deg, #ffe6e6, #e6f7ff);
       --bg-dark: linear-gradient(135deg, #1b1b1b, #2c2c2c);
-      --text-light: #000;
-      --text-dark: #fff;
+      --text-light: #fff;
+      --text-dark: #000;
+      --btn-bg: rgba(255, 255, 255, 0.2);
+      --btn-hover: rgba(255, 255, 255, 0.5);
     }
 
     body {
       margin: 0;
       padding: 0;
       font-family: 'Orbitron', sans-serif;
-      color: var(--text-light);
       background: var(--bg-light);
+      color: var(--text-light);
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
       transition: background 0.5s ease, color 0.5s ease;
       overflow-x: hidden;
@@ -33,17 +36,20 @@
     }
 
     header {
-      margin-top: 20px;
       text-align: center;
+      margin-top: 20px;
+      position: relative;
     }
 
     h1 {
-      font-size: 3rem;
+      font-size: 4rem;
+      text-transform: uppercase;
+      letter-spacing: 5px;
       margin-bottom: 0.5rem;
     }
 
     .logo {
-      width: 80px;
+      width: 100px;
       transition: filter 0.5s ease;
     }
 
@@ -54,51 +60,48 @@
     #score {
       font-size: 2.5rem;
       margin: 1rem auto;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
       transition: color 0.5s ease;
     }
 
-    #result {
-      font-size: 1.5rem;
-      margin: 1rem;
-      max-width: 90vw;
-    }
-
-    .choices {
-      font-size: 1rem;
-      margin-top: 0.3rem;
+    #score .score-value {
+      font-weight: bold;
     }
 
     .buttons {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 30px;
+      margin-top: 2rem;
       flex-wrap: wrap;
     }
 
     .emoji-btn {
-      font-size: 3rem;
-      width: 100px;
-      height: 100px;
+      font-size: 4rem;
+      width: 120px;
+      height: 120px;
       border: none;
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      background: var(--btn-bg);
       backdrop-filter: blur(10px);
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, background 0.3s ease;
     }
 
     .emoji-btn:hover {
       transform: scale(1.1);
+      background: var(--btn-hover);
     }
 
     .controls {
       display: flex;
       justify-content: space-between;
-      align-items: center;
       width: 90%;
       max-width: 600px;
-      margin: 1rem auto;
+      margin-top: 20px;
     }
 
     .toggle-btn {
@@ -106,18 +109,18 @@
       border: none;
       cursor: pointer;
       padding: 10px;
+      color: var(--text-light);
     }
 
     .toggle-btn svg {
       width: 30px;
       height: 30px;
-      fill: currentColor;
     }
 
     .footer {
-      font-size: 0.9rem;
-      margin-top: auto;
-      margin-bottom: 1rem;
+      position: absolute;
+      bottom: 20px;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -125,13 +128,18 @@
     }
 
     .footer img {
-      width: 30px;
+      width: 40px;
       filter: grayscale(1);
+      transition: filter 0.3s ease;
+    }
+
+    .footer img:hover {
+      filter: none;
     }
 
     @media (max-width: 600px) {
       h1 {
-        font-size: 2.2rem;
+        font-size: 3rem;
       }
 
       #score {
@@ -139,18 +147,21 @@
       }
 
       .emoji-btn {
-        width: 80px;
-        height: 80px;
-        font-size: 2.5rem;
+        width: 100px;
+        height: 100px;
+        font-size: 3.5rem;
       }
     }
+
   </style>
 </head>
 <body>
   <header>
     <img src="m.png" class="logo" alt="Logo" />
-    <h1>Rock Paper Scissors</h1>
-    <div id="score">0 : 0</div>
+    <h1>Ultimate Rock Paper Scissors</h1>
+    <div id="score">
+      <div class="score-value" id="player-score">0</div> : <div class="score-value" id="computer-score">0</div>
+    </div>
   </header>
 
   <div class="buttons">
@@ -235,21 +246,13 @@
       }
 
       document.getElementById('result').innerHTML = `
-        <div><strong>${gameResult}</strong></div>
-        <div><em>"${resultText}"</em></div>
-        <div class="choices">You: ${playerChoice} vs Computer: ${computerChoice}</div>
+        <p>${gameResult}</p>
+        <p>${resultText}</p>
+        <p>Computer chose: ${computerChoice}</p>
       `;
 
-      updateScore();
-    }
-
-    function updateScore() {
-      const score = document.getElementById('score');
-      score.innerText = `${playerScore} : ${computerScore}`;
-
-      const colorMap = ["#00aaff", "#ffcc00", "#00ff99", "#ff66cc", "#ff4444"];
-      const index = Math.floor((playerScore + computerScore) / 5) % colorMap.length;
-      score.style.color = colorMap[index];
+      document.getElementById('player-score').innerText = playerScore;
+      document.getElementById('computer-score').innerText = computerScore;
     }
 
     function toggleDarkMode() {
@@ -257,12 +260,8 @@
     }
 
     function toggleMusic() {
-      const player = document.getElementById('spotify');
-      if (player.style.display === 'none') {
-        player.style.display = 'block';
-      } else {
-        player.style.display = 'none';
-      }
+      const iframe = document.getElementById('spotify');
+      iframe.style.display = iframe.style.display === 'none' ? 'block' : 'none';
     }
   </script>
 </body>
