@@ -1,74 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rock Paper Scissors</title>
   <style>
-    *{
-        margin: 70px;
-        padding: auto;
-        text-align: center;
-        font-size: 49px;
-        font-family: Arial, Helvetica, sans-serif;
+    * {
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
     }
+
     body {
+      margin: 0;
+      padding: 0;
       text-align: center;
-      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom, #fdfdfd, #e0e0e0);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
     }
-    button{
-        width: 200px;
-        height: 200px;
-        size: 100px;
-        
+
+    h1 {
+      font-size: 2.5rem;
+      margin-top: 30px;
+      color: #444;
     }
-    p{
-        font-size: x-large;
+
+    .scoreboard {
+      margin: 10px 0;
+      font-size: 1.2rem;
     }
-#result{
-    color: rgb(83, 83, 83);
-    transition: ;
-    margin: 20px;
-    border-radius: 50px;
-    background-color: rgb(236, 236, 236);
-    width: auto;
-    font-size: xx-large;
-    
-}
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px 0;
+    }
+
+    button {
+      font-size: 2.5rem;
+      padding: 20px;
+      border-radius: 50%;
+      border: none;
+      background: #fff;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: transform 0.1s ease;
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.95);
+      background-color: #f0f0f0;
+    }
+
+    #result {
+      font-size: 1.4rem;
+      background-color: #fff;
+      padding: 15px 20px;
+      border-radius: 20px;
+      margin: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 90%;
+    }
+
+    #reset {
+      margin-top: 10px;
+      font-size: 1rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      button {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .scoreboard {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Rock Paper Scissors</h1>
+
+  <h1>🔥 Rock Paper Scissors 🔥</h1>
+
+  <div class="scoreboard">
+    <p>Round: <span id="round">1</span></p>
+    <p>Player: <span id="playerScore">0</span> | Computer: <span id="computerScore">0</span></p>
+  </div>
 
   <p>Choose your move:</p>
-  <button onclick="play('Rock')">🗿</button>
-  <button onclick="play('Paper')">📄</button>
-  <button onclick="play('Scissors')">✂️</button>
+  <div class="buttons">
+    <button onclick="play('Rock')">🪨</button>
+    <button onclick="play('Paper')">📄</button>
+    <button onclick="play('Scissors')">✂️</button>
+  </div>
 
   <p id="result"></p>
 
-</body>
-<script>
+  <button id="reset" onclick="resetGame()">🔁 Reset Game</button>
+
+  <audio id="winSound" src="https://www.soundjay.com/button/beep-07.wav"></audio>
+  <audio id="loseSound" src="https://www.soundjay.com/button/beep-10.wav"></audio>
+
+  <script>
+    let playerScore = 0;
+    let computerScore = 0;
+    let round = 1;
+
+    const taunts = [
+      "😎 Too easy!",
+      "🧠 Outplayed!",
+      "🎲 Try again, human.",
+      "💻 I'm programmed to win!",
+      "😏 Not today!"
+    ];
+
     function play(playerChoice) {
+      const choices = ['Rock', 'Paper', 'Scissors'];
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
 
-      var choices = ['Rock', 'Paper', 'Scissors'];
-      var computerChoice = choices[Math.floor(Math.random() * 3)];
+      let result = '';
+      let win = false;
 
-      var result;
       if (playerChoice === computerChoice) {
-        result = "Tied 🥱";
+        result = `🤝 It's a tie! Both chose ${playerChoice}.`;
       } else if (
         (playerChoice === 'Rock' && computerChoice === 'Scissors') ||
         (playerChoice === 'Paper' && computerChoice === 'Rock') ||
         (playerChoice === 'Scissors' && computerChoice === 'Paper')
       ) {
-        result = "You Win! 🏆";
+        result = `🎉 You win! ${playerChoice} beats ${computerChoice}.`;
+        playerScore++;
+        win = true;
+        document.getElementById('winSound').play();
       } else {
-        result = "You Lose! 👎";
+        result = `💀 You lose! ${computerChoice} beats ${playerChoice}.<br>${taunts[Math.floor(Math.random() * taunts.length)]}`;
+        computerScore++;
+        document.getElementById('loseSound').play();
       }
 
-      document.getElementById('result').innerHTML = `<br> Player: ${playerChoice}<br>-<br>Computer: ${computerChoice}<br>-<br>${result}<br><br>`;
+      round++;
+      updateUI(result);
+    }
+
+    function updateUI(resultText) {
+      document.getElementById('playerScore').textContent = playerScore;
+      document.getElementById('computerScore').textContent = computerScore;
+      document.getElementById('round').textContent = round;
+      document.getElementById('result').innerHTML = resultText;
+    }
+
+    function resetGame() {
+      playerScore = 0;
+      computerScore = 0;
+      round = 1;
+      updateUI("Game reset. Let's go again!");
     }
   </script>
+
+</body>
 </html>
