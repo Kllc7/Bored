@@ -39,6 +39,14 @@
     .title {
       font-size: 3rem;
       margin-bottom: 1rem;
+      transition: color 0.3s;
+    }
+
+    .score {
+      font-size: 4rem;
+      font-weight: bold;
+      margin-top: 1rem;
+      transition: color 0.3s;
     }
 
     .buttons {
@@ -80,14 +88,15 @@
       align-items: center;
     }
 
-    .toggle-btn {
+    .toggle-btn,
+    .toggle-music-btn {
       background: var(--glass-light);
       border: none;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 10px;
+      padding: 0.5rem;
+      border-radius: 50%;
       cursor: pointer;
       backdrop-filter: blur(8px);
+      transition: background 0.3s;
     }
 
     .dark-mode {
@@ -103,7 +112,8 @@
       background: rgba(50, 50, 50, 0.85);
     }
 
-    .dark-mode .toggle-btn {
+    .dark-mode .toggle-btn,
+    .dark-mode .toggle-music-btn {
       background: var(--glass-dark);
       color: var(--text-light);
     }
@@ -111,6 +121,10 @@
     @media (max-width: 600px) {
       .title {
         font-size: 2rem;
+      }
+
+      .score {
+        font-size: 3rem;
       }
 
       .buttons {
@@ -131,11 +145,21 @@
 </head>
 <body>
   <div class="controls">
-    <button id="toggle-mode" class="toggle-btn">Toggle Dark Mode</button>
-    <button id="toggle-music" class="toggle-btn">🔊 Music</button>
+    <button id="toggle-mode" class="toggle-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m8-9h-1M5 12H4m15.364-6.364l-.707.707M6.343 18.364l-.707-.707M18.364 18.364l-.707-.707M6.343 6.343l-.707.707M12 9a3 3 0 11-6 0 3 3 0 016 0z"/>
+      </svg>
+    </button>
+    <button id="toggle-music" class="toggle-music-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v16l-12-3z"/>
+      </svg>
+    </button>
   </div>
 
   <h1 class="title">Rock Paper Scissors</h1>
+
+  <div class="score" id="score">Score: 0</div>
 
   <div class="buttons">
     <button class="choice" onclick="play('Rock')">🪨</button>
@@ -151,11 +175,14 @@
   </audio>
 
   <script>
+    let score = 0;
     const resultDisplay = document.getElementById('result');
+    const scoreDisplay = document.getElementById('score');
     const music = document.getElementById('bg-music');
     const toggleMusicBtn = document.getElementById('toggle-music');
     const toggleModeBtn = document.getElementById('toggle-mode');
     const body = document.body;
+    const title = document.querySelector('.title');
 
     function play(playerChoice) {
       const choices = ['Rock', 'Paper', 'Scissors'];
@@ -170,24 +197,32 @@
         (playerChoice === 'Scissors' && computerChoice === 'Paper')
       ) {
         result = "You Win! 🏆";
+        score += 1;
       } else {
         result = "You Lose! 👎";
+        score -= 1;
       }
 
       resultDisplay.innerHTML = `You: ${playerChoice} - Computer: ${computerChoice}<br>${result}`;
+      scoreDisplay.innerHTML = `Score: ${score}`;
+
+      if (score % 5 === 0 && score !== 0) {
+        scoreDisplay.style.color = 'red';
+      } else {
+        scoreDisplay.style.color = 'black';
+      }
     }
 
     toggleModeBtn.onclick = () => {
       body.classList.toggle('dark-mode');
+      title.classList.toggle('dark-mode');
     };
 
     toggleMusicBtn.onclick = () => {
       if (music.paused) {
         music.play();
-        toggleMusicBtn.textContent = "🔇 Music";
       } else {
         music.pause();
-        toggleMusicBtn.textContent = "🔊 Music";
       }
     };
   </script>
